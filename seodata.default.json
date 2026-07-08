@@ -1,0 +1,26 @@
+{
+  "success": true,
+  "data": {
+    "title": "Default Title",
+    "meta_description": "Default Description",
+    "keywords": "",
+    "favicon": "",
+    "og_title": "",
+    "og_description": "",
+    "og_image": "",
+    "og_type": "website",
+    "domain": "",
+    "property_name": "",
+    "status": "Active",
+    "script_1": "",
+    "script_2": "",
+    "h1": "",
+    "h2": "",
+    "gtag_id": null,
+    "whatsapp_gtag_id": null,
+    "phone_conversation_number": null,
+    "phone_conversation_id": null,
+    "about_builder": "",
+    "property_detail": ""
+  }
+}

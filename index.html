@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- Warm up the API + image origins before any request fires -->
+  <link rel="preconnect" href="https://www.buyindiahomes.in" crossorigin />
+  <link rel="preconnect" href="https://buyindiahomes.in" />
+  <link rel="dns-prefetch" href="https://buyindiahomes.in" />
+
+  <title><%= title %></title>
+  <meta name="description" content="<%= description %>" />
+  <meta name="keywords" content="<%= keywords %>" />
+  <meta name="robots" content="<%= robots %>" />
+  <meta name="theme-color" content="#14110c" />
+
+  <meta property="og:title" content="<%= og_title %>" />
+  <meta property="og:description" content="<%= og_description %>" />
+  <meta property="og:image" content="<%= og_image %>" />
+  <meta property="og:type" content="<%= og_type %>" />
+  <meta property="og:url" content="https://<%= domain %>/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="<%= favicon %>" />
+  <link rel="canonical" href="https://<%= domain %>/" />
+
+  <!-- Inject JSON-LD Structured Data -->
+  <% if (script_1 && script_1 !== '{}') { %>
+    <script type="application/ld+json">
+      <%- script_1 %>
+    </script>
+  <% } %>
+
+  <% if (script_2 && script_2 !== '{}') { %>
+    <script type="application/ld+json">
+      <%- script_2 %>
+    </script>
+  <% } %>
+
+  <!-- Google Tag Manager -->
+  <% if (gtag_id) { %>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= gtag_id %>"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '<%= gtag_id %>');
+    </script>
+  <% } %>
+
+  <!-- WhatsApp Conversion -->
+  <% if (whatsapp_gtag_id) { %>
+    <script>
+      gtag('event', 'conversion', {'send_to': '<%= whatsapp_gtag_id %>'});
+    </script>
+  <% } %>
+
+  <!-- Phone Conversion Tracking -->
+  <% if (phone_conversation_id && phone_conversation_number) { %>
+    <script>
+      gtag('config', '<%= phone_conversation_id %>', {
+        'phone_conversion_number': '<%= phone_conversation_number %>'
+      });
+    </script>
+  <% } %>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>

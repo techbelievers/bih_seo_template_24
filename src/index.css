@@ -1,0 +1,328 @@
+/* ─────────────────────────────────────────────────────────────
+   LUXE ESTATE — Design System
+   Luxury · Minimal · Modern · Elegant · Spacious · Premium
+   Self-hosted variable fonts (zero render-blocking requests)
+   ───────────────────────────────────────────────────────────── */
+@import "@fontsource-variable/playfair-display";
+@import "@fontsource-variable/manrope";
+@import "tailwindcss";
+
+@theme {
+  /* Palette — warm obsidian, ivory, champagne gold */
+  --color-ink: #14110c;
+  --color-ink-soft: #1d1912;
+  --color-ink-mute: #2a251c;
+  --color-ivory: #f7f4ec;
+  --color-cream: #fdfcf8;
+  --color-gold: #c2a05e;
+  --color-gold-deep: #a3833f;
+  --color-gold-soft: #e9dcc0;
+  --color-stone: #6f6858;
+  --color-mist: #b3aa99;
+  --color-line: #e8e2d3;
+  --color-line-dark: #35301f;
+
+  /* Typography */
+  --font-display: "Playfair Display Variable", Georgia, "Times New Roman", serif;
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  /* Layered depth shadows (the "3D" language) */
+  --shadow-lift: 0 1px 2px rgb(20 17 12 / 0.06), 0 8px 24px -8px rgb(20 17 12 / 0.14);
+  --shadow-float: 0 2px 4px rgb(20 17 12 / 0.08), 0 18px 46px -14px rgb(20 17 12 / 0.28);
+  --shadow-deep: 0 4px 8px rgb(20 17 12 / 0.1), 0 32px 80px -20px rgb(20 17 12 / 0.45);
+  --shadow-gold: 0 6px 28px -6px rgb(194 160 94 / 0.5);
+
+  --animate-shimmer: shimmer 1.8s linear infinite;
+  --animate-kenburns: kenburns 14s ease-out forwards;
+  --animate-fade-up: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-float: floaty 6s ease-in-out infinite;
+
+  @keyframes shimmer {
+    from { background-position: -600px 0; }
+    to { background-position: 600px 0; }
+  }
+  @keyframes kenburns {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes floaty {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+/* Anchored sections clear the sticky nav */
+[id] { scroll-margin-top: 84px; }
+
+/* ── Utilities ─────────────────────────────────────────────── */
+
+/* Skeleton shimmer (perceived speed — no spinners) */
+.skeleton {
+  background: linear-gradient(90deg, #eee9dd 25%, #f6f2e8 50%, #eee9dd 75%);
+  background-size: 600px 100%;
+  animation: var(--animate-shimmer);
+}
+.skeleton-dark {
+  background: linear-gradient(90deg, #221e15 25%, #2c271b 50%, #221e15 75%);
+  background-size: 600px 100%;
+  animation: var(--animate-shimmer);
+}
+
+/* Scroll reveal — JS adds .is-visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* 3D tilt cards — pointer devices only */
+@media (hover: hover) and (pointer: fine) {
+  .tilt {
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+  }
+  .tilt:hover {
+    transform: perspective(900px) rotateX(2.5deg) rotateY(-2.5deg) translateY(-6px);
+    box-shadow: var(--shadow-float);
+  }
+  .tilt-sm:hover {
+    transform: perspective(900px) rotateX(1.5deg) rotateY(-1.5deg) translateY(-4px);
+  }
+}
+
+/* Champagne gradient text */
+.text-gold-sheen {
+  background: linear-gradient(105deg, #a3833f 0%, #dcc084 45%, #b99755 70%, #e6d3a3 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Glass panel over imagery */
+.glass {
+  background: rgb(20 17 12 / 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgb(255 255 255 / 0.12);
+}
+.glass-light {
+  background: rgb(253 252 248 / 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgb(20 17 12 / 0.08);
+}
+
+/* Gold hairline with center content */
+.hairline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hairline::before,
+.hairline::after {
+  content: "";
+  height: 1px;
+  width: 44px;
+  background: linear-gradient(90deg, transparent, var(--color-gold));
+}
+.hairline::after {
+  background: linear-gradient(90deg, var(--color-gold), transparent);
+}
+
+/* Eyebrow label */
+.eyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold-deep);
+}
+
+/* Buttons */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(115deg, #b18b45, #d3b475 48%, #b18b45);
+  background-size: 180% 100%;
+  color: #191509;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  padding: 0.9rem 1.9rem;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-gold);
+  transition: background-position 0.5s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-gold:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 34px -6px rgb(194 160 94 / 0.65);
+}
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  padding: 0.9rem 1.9rem;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+.btn-ghost:hover {
+  border-color: var(--color-gold);
+  background: rgb(194 160 94 / 0.12);
+  transform: translateY(-2px);
+}
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--color-ink);
+  color: var(--color-ivory);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 9999px;
+  padding: 0.85rem 1.7rem;
+  font-size: 0.9rem;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-dark:hover {
+  background: var(--color-ink-mute);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* Rich HTML from the CMS (descriptions, FAQs, blogs) */
+.prose-luxe {
+  line-height: 1.85;
+  color: var(--color-stone);
+}
+.prose-luxe h1, .prose-luxe h2, .prose-luxe h3, .prose-luxe h4 {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 1.6em 0 0.6em;
+}
+.prose-luxe h1 { font-size: 1.7rem; }
+.prose-luxe h2 { font-size: 1.45rem; }
+.prose-luxe h3 { font-size: 1.2rem; }
+.prose-luxe h4 { font-size: 1.05rem; }
+.prose-luxe > :first-child { margin-top: 0; }
+.prose-luxe p { margin: 0 0 1.1em; }
+.prose-luxe strong { color: var(--color-ink); font-weight: 700; }
+.prose-luxe a {
+  color: var(--color-gold-deep);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-luxe a:hover { color: var(--color-ink); }
+.prose-luxe ul, .prose-luxe ol { margin: 0 0 1.2em 1.3em; }
+.prose-luxe ul { list-style: none; }
+.prose-luxe ul li {
+  position: relative;
+  padding-left: 1.2em;
+  margin-bottom: 0.5em;
+}
+.prose-luxe ul li::before {
+  content: "◆";
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-size: 0.6em;
+  color: var(--color-gold);
+}
+.prose-luxe ol { list-style: decimal; }
+.prose-luxe img { border-radius: 1rem; margin: 1.2em 0; height: auto; }
+.prose-luxe table { width: 100%; border-collapse: collapse; margin: 1.2em 0; font-size: 0.92em; }
+.prose-luxe td, .prose-luxe th { border: 1px solid var(--color-line); padding: 0.6em 0.8em; }
+.prose-luxe blockquote {
+  border-left: 3px solid var(--color-gold);
+  padding-left: 1.2em;
+  font-style: italic;
+  margin: 1.4em 0;
+}
+
+/* Dark variant */
+.prose-luxe.on-dark { color: var(--color-mist); }
+.prose-luxe.on-dark h1, .prose-luxe.on-dark h2, .prose-luxe.on-dark h3,
+.prose-luxe.on-dark h4, .prose-luxe.on-dark strong { color: var(--color-ivory); }
+.prose-luxe.on-dark a { color: var(--color-gold); }
+.prose-luxe.on-dark a:hover { color: var(--color-gold-soft); }
+.prose-luxe.on-dark td, .prose-luxe.on-dark th { border-color: var(--color-line-dark); }
+
+/* Slim gold scrollbar for scrollable prose panels */
+.scroll-luxe { scrollbar-width: thin; scrollbar-color: var(--color-gold) transparent; }
+.scroll-luxe::-webkit-scrollbar { width: 5px; }
+.scroll-luxe::-webkit-scrollbar-thumb { background: var(--color-gold); border-radius: 4px; }
+.scroll-luxe::-webkit-scrollbar-track { background: transparent; }
+
+/* Hide scrollbar on horizontal card rails (mobile) */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Map iframe fills its container */
+.map-embed iframe {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  border: 0;
+  filter: saturate(0.85) contrast(1.02);
+}
+
+/* Prerendered load: entrance animations already played in the static
+   HTML — skip them so React's takeover doesn't re-run them. */
+.preloaded .animate-fade-up {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+/* Accessibility: honour reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .tilt, .tilt:hover, .tilt-sm:hover { transform: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
