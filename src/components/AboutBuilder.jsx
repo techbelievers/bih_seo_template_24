@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { ChevronDown, Building2 } from "lucide-react";
+import React from "react";
+import { Building2 } from "lucide-react";
 import useApi from "../hooks/useApi";
 import Reveal from "./ui/Reveal";
+import Expandable from "./ui/Expandable";
 
 /** Developer story — rendered from property_specification HTML. */
 const AboutBuilder = () => {
   const { data, loading } = useApi("propert-details");
-  const [open, setOpen] = useState(false);
   const d = data?.property_details;
 
   if (loading || !d?.property_specification) return null;
@@ -24,26 +24,17 @@ const AboutBuilder = () => {
           </h2>
         </Reveal>
 
+        {/* Body is left-aligned prose (bulleted lists read correctly);
+            Expandable measures real height so nothing is cut off. */}
         <Reveal delay={120} className="mt-10">
-          <div className="relative">
-            <div
-              className="prose-luxe on-dark overflow-hidden text-center transition-[max-height] duration-700 ease-in-out"
-              style={{ maxHeight: open ? "5000px" : "260px" }}
-              dangerouslySetInnerHTML={{ __html: d.property_specification }}
-            />
-            {!open && (
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
-            )}
-          </div>
-          <div className="mt-5 text-center">
-            <button
-              onClick={() => setOpen((o) => !o)}
-              className="inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.16em] text-gold transition hover:text-gold-soft"
-            >
-              {open ? "Show Less" : "The Full Story"}
-              <ChevronDown size={15} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
-            </button>
-          </div>
+          <Expandable
+            html={d.property_specification}
+            dark
+            collapsedHeight={300}
+            fadeFrom="from-ink"
+            moreLabel="The Full Story"
+            lessLabel="Show Less"
+          />
         </Reveal>
       </div>
     </section>

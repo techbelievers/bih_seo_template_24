@@ -15,6 +15,19 @@ import { chromium } from "playwright";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { buildLlmsTxt } from "./llmsTxt.mjs";
+
+function readSeo() {
+  for (const f of ["seodata.json", "public/seodata.json"]) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(path.resolve(f), "utf-8"));
+      if (parsed?.data) return parsed.data;
+    } catch {
+      /* try next */
+    }
+  }
+  return {};
+}
 
 const PORT = 4599;
 const OUT = path.resolve("dist/index.html");
@@ -100,6 +113,24 @@ try {
   fs.writeFileSync(OUT, "<!doctype html>\n" + html.replace(/^<!doctype html>\s*/i, ""));
   const kb = (Buffer.byteLength(html) / 1024).toFixed(0);
   console.log(`[prerender] ✓ dist/index.html now contains full HTML (${kb} KB, ${endpoints.length} API payloads inlined)`);
+
+  // Auto-generate llms.txt from the same captured data (llmstxt.org).
+  try {
+    const seo = readSeo();
+    // The CI workflow sets VITE_SLUG_URL to the real domain; it's the most
+    // reliable base URL even if the seodata fetch fell back to a placeholder.
+    const isPlaceholder = !seo.domain || seo.domain === "domain.com";
+    if (isPlaceholder && process.env.VITE_SLUG_URL) {
+      seo.domain = process.env.VITE_SLUG_URL;
+    }
+    const llms = buildLlmsTxt(apiData, seo);
+    fs.writeFileSync(path.resolve("dist/llms.txt"), llms);
+    console.log(
+      `[prerender] ✓ dist/llms.txt generated (${llms.split("\n").length} lines, domain: ${seo.domain || "—"})`
+    );
+  } catch (e) {
+    console.warn(`[prerender] llms.txt skipped: ${e.message}`);
+  }
 } catch (err) {
   console.warn(`[prerender] skipped — shipping client-rendered build. Reason: ${err.message}`);
 } finally {

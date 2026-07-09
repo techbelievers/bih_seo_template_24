@@ -46,13 +46,13 @@ const Blogs = () => {
               <Reveal>
                 <Link
                   to={`/blogs/${featured.post_slug}`}
-                  className="tilt group mb-10 grid overflow-hidden rounded-3xl border border-line bg-white shadow-float md:grid-cols-2"
+                  className="group mb-10 grid overflow-hidden rounded-3xl border border-line bg-white shadow-lift transition-all duration-500 hover:-translate-y-1 hover:shadow-float md:grid-cols-2"
                 >
                   <Img
                     src={featured.post_photo}
                     alt={featured.post_title}
                     aspect="16/10"
-                    className="h-full"
+                    className="h-full min-h-[240px]"
                     imgClassName="transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="flex flex-col justify-center p-7 md:p-12">

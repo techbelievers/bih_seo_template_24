@@ -13,6 +13,8 @@ import Layouts from "../components/Layouts";
 import LocationAdvantages from "../components/LocationAdvantages";
 import LocationMap from "../components/LocationMap";
 import Banks from "../components/Banks";
+import EmiCalculator from "../components/EmiCalculator";
+import MahaReraSection from "../components/MahaReraSection";
 import AboutBuilder from "../components/AboutBuilder";
 import Blogs from "../components/Blogs";
 import FAQ from "../components/FAQ";
@@ -29,6 +31,7 @@ const HomePage = () => (
     <Hero />
     <ReraRibbon />
     <Overview />
+     <LazySection anchor="rera" minHeight={0}><MahaReraSection /></LazySection>
     <LazySection anchor="price" minHeight={820}><Prices /></LazySection>
     <LazySection minHeight={0}><Advertisement /></LazySection>
     <LazySection anchor="amenities" minHeight={760}><Amenities /></LazySection>
@@ -38,6 +41,7 @@ const HomePage = () => (
     <LazySection anchor="connectivity" minHeight={700}><LocationAdvantages /></LazySection>
     <LazySection anchor="location" minHeight={760}><LocationMap /></LazySection>
     <LazySection anchor="banks" minHeight={0}><Banks /></LazySection>
+    <LazySection anchor="emi" minHeight={0}><EmiCalculator /></LazySection>
     <LazySection anchor="about-builder" minHeight={0}><AboutBuilder /></LazySection>
     <LazySection anchor="blogs" minHeight={0}><Blogs /></LazySection>
     <LazySection anchor="faq" minHeight={0}><FAQ /></LazySection>

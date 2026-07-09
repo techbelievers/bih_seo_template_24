@@ -1,39 +1,9 @@
-import React, { useState } from "react";
-import { MapPin, Building2, Ruler, Layers, ChevronDown, PhoneCall, FileDown } from "lucide-react";
+import React from "react";
+import { MapPin, Building2, Ruler, Layers, PhoneCall, FileDown } from "lucide-react";
 import useApi from "../hooks/useApi";
 import Reveal from "./ui/Reveal";
+import Expandable from "./ui/Expandable";
 import { useEnquiry } from "../hooks/useEnquiry";
-
-/** Expandable rich-text panel — full content stays in the DOM for SEO. */
-const Expandable = ({ html, dark = false }) => {
-  const [open, setOpen] = useState(false);
-  if (!html) return null;
-  return (
-    <div>
-      <div className="relative">
-        <div
-          className={`prose-luxe ${dark ? "on-dark" : ""} overflow-hidden transition-[max-height] duration-700 ease-in-out`}
-          style={{ maxHeight: open ? "6000px" : "340px" }}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-        {!open && (
-          <div
-            className={`pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t ${
-              dark ? "from-ink-soft" : "from-cream"
-            } to-transparent`}
-          />
-        )}
-      </div>
-      <button
-        onClick={() => setOpen((o) => !o)}
-        className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.16em] text-gold-deep transition hover:text-gold"
-      >
-        {open ? "Read Less" : "Continue Reading"}
-        <ChevronDown size={15} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
-      </button>
-    </div>
-  );
-};
 
 const Overview = () => {
   const { data, loading } = useApi("propert-details");
@@ -69,7 +39,7 @@ const Overview = () => {
                   ))}
                 </div>
               ) : (
-                <Expandable html={d?.property_description} />
+                <Expandable html={d?.property_description} collapsedHeight={360} fadeFrom="from-cream" />
               )}
             </Reveal>
           </div>
@@ -78,16 +48,20 @@ const Overview = () => {
           <Reveal delay={200}>
             <aside className="tilt sticky top-24 rounded-3xl border border-line bg-white p-7 shadow-float md:p-8">
               <h3 className="font-display text-xl font-semibold text-ink">At a Glance</h3>
+              {/* dl contains only <div> groups, each directly wrapping one
+                  <dt> + <dd> — keeps the accessibility tree well-formed. */}
               <dl className="mt-6 space-y-5">
                 {(loading ? [] : specs).map(({ icon: Icon, label, value }) => (
-                  <div key={label} className="flex items-start gap-4 border-b border-line pb-5 last:border-0 last:pb-0">
-                    <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/12 text-gold-deep">
-                      <Icon size={17} strokeWidth={1.8} />
-                    </span>
-                    <div className="min-w-0">
-                      <dt className="text-[11px] font-bold uppercase tracking-[0.18em] text-stone">{label}</dt>
-                      <dd className="mt-0.5 text-[15px] font-semibold leading-snug text-ink">{value}</dd>
-                    </div>
+                  <div key={label} className="border-b border-line pb-5 last:border-0 last:pb-0">
+                    <dt className="flex items-center gap-3 text-[11px] font-bold uppercase tracking-[0.18em] text-stone">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold/12 text-gold-deep">
+                        <Icon size={16} strokeWidth={1.8} />
+                      </span>
+                      {label}
+                    </dt>
+                    <dd className="mt-2 break-words pl-12 text-[15px] font-semibold leading-snug text-ink">
+                      {value}
+                    </dd>
                   </div>
                 ))}
                 {loading &&
@@ -114,7 +88,7 @@ const Overview = () => {
               <h3 className="mb-8 font-display text-2xl font-semibold text-ivory md:text-4xl">
                 A Considered Investment
               </h3>
-              <Expandable html={d.property_information} dark />
+              <Expandable html={d.property_information} dark collapsedHeight={320} fadeFrom="from-ink-soft" />
             </div>
           </Reveal>
         )}

@@ -66,6 +66,9 @@ body {
   color: var(--color-ink);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* clip (not hidden) stops stray horizontal overflow on mobile without
+     turning the body into a scroll container — keeps position:sticky working */
+  overflow-x: clip;
 }
 
 ::selection {

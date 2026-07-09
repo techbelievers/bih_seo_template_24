@@ -42,7 +42,7 @@ const Advertisement = () => {
                 href={ad.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="tilt group relative block overflow-hidden rounded-3xl border border-line shadow-lift"
+                className="group relative block overflow-hidden rounded-3xl border border-line shadow-lift transition-all duration-500 hover:-translate-y-1 hover:shadow-float"
               >
                 <Img
                   src={ad.image}

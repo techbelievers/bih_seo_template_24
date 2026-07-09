@@ -4,20 +4,26 @@ import useApi from "../hooks/useApi";
 import { useEnquiry } from "../hooks/useEnquiry";
 import { cleanPhone } from "../lib/phone";
 
-const NAV_ITEMS = [
+const BASE_NAV = [
   { id: "about", label: "Overview" },
   { id: "price", label: "Pricing" },
   { id: "amenities", label: "Amenities" },
   { id: "gallery", label: "Gallery" },
   { id: "layouts", label: "Plans" },
   { id: "location", label: "Location" },
+  { id: "blogs", label: "Blog", optional: true },
   { id: "contact", label: "Contact" },
 ];
 
 const Navbar = () => {
   const { data: header, loading } = useApi("header");
   const { data: footer } = useApi("footer");
+  const { data: blogsData } = useApi("blogs");
   const openEnquiry = useEnquiry();
+
+  // Drop the Blog link when the property has no articles.
+  const hasBlogs = (blogsData?.blogs?.length || 0) > 0;
+  const NAV_ITEMS = BASE_NAV.filter((n) => n.id !== "blogs" || hasBlogs);
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
@@ -43,7 +49,8 @@ const Navbar = () => {
     );
     sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
-  }, [loading]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, hasBlogs]);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";

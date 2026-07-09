@@ -51,13 +51,15 @@ const ReraRibbon = () => {
               <Reveal>
                 <dl className="grid grid-cols-2 gap-x-6 gap-y-8 text-center md:flex md:justify-around">
                   {stats.map((s) => (
-                    <div key={s.label}>
-                      <dd className="font-display text-2xl font-semibold text-gold-sheen text-gold md:text-4xl">
-                        {s.value}
-                      </dd>
+                    // flex-col-reverse keeps the value visually on top while
+                    // dt precedes dd in the DOM (well-formed a11y tree).
+                    <div key={s.label} className="flex flex-col-reverse">
                       <dt className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.22em] text-mist">
                         {s.label}
                       </dt>
+                      <dd className="font-display text-2xl font-semibold text-gold-sheen text-gold md:text-4xl">
+                        {s.value}
+                      </dd>
                     </div>
                   ))}
                 </dl>

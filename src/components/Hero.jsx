@@ -125,13 +125,13 @@ const Hero = () => {
             style={{ animationDelay: "420ms" }}
           >
             {facts.map(({ icon: Icon, label, value }) => (
-              <div key={label} className="flex items-center gap-3.5 px-5 py-4">
-                <Icon size={20} className="shrink-0 text-gold" strokeWidth={1.6} />
+              <div key={label} className="flex items-start gap-3.5 px-5 py-4">
+                <Icon size={20} className="mt-0.5 shrink-0 text-gold" strokeWidth={1.6} />
                 <div className="min-w-0">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ivory/50">
                     {label}
                   </p>
-                  <p className="truncate text-sm font-semibold text-ivory">{value}</p>
+                  <p className="text-sm font-semibold leading-snug text-ivory">{value}</p>
                 </div>
               </div>
             ))}

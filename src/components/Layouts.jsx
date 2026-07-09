@@ -85,8 +85,9 @@ const Layouts = () => {
           current && (
             <Reveal>
               <div className="grid items-center gap-8 rounded-3xl border border-line bg-white p-5 shadow-float sm:p-8 md:grid-cols-2 md:gap-12">
-                {/* Plan image */}
-                <div className="group relative overflow-hidden rounded-2xl border border-line bg-ivory">
+                {/* Plan image — min-w-0 lets the grid column shrink on
+                    mobile so wide plan images never overflow the viewport. */}
+                <div className="group relative min-w-0 overflow-hidden rounded-2xl border border-line bg-ivory">
                   <Img
                     key={current.layout_image}
                     src={current.layout_image}
@@ -122,11 +123,11 @@ const Layouts = () => {
                 </div>
 
                 {/* Details */}
-                <div>
+                <div className="min-w-0">
                   <p className="eyebrow mb-2">
                     {slide + 1} / {layouts.length}
                   </p>
-                  <h3 className="font-display text-3xl font-semibold text-ink">
+                  <h3 className="font-display text-2xl font-semibold text-ink break-words sm:text-3xl">
                     {current.layout_name}
                   </h3>
 
