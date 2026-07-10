@@ -48,14 +48,16 @@ const Blogs = () => {
                   to={`/blogs/${featured.post_slug}`}
                   className="group mb-10 grid overflow-hidden rounded-3xl border border-line bg-white shadow-lift transition-all duration-500 hover:-translate-y-1 hover:shadow-float md:grid-cols-2"
                 >
+                  {/* No fixed aspect here: with a stretched grid row, aspect-ratio
+                      would compute a width wider than the column and overlap the
+                      text. Explicit heights + object-cover keep it contained. */}
                   <Img
                     src={featured.post_photo}
                     alt={featured.post_title}
-                    aspect="16/10"
-                    className="h-full min-h-[240px]"
+                    className="h-56 w-full sm:h-72 md:h-full"
                     imgClassName="transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="flex flex-col justify-center p-7 md:p-12">
+                  <div className="flex min-w-0 flex-col justify-center p-7 md:p-12">
                     <p className="eyebrow mb-3">Featured</p>
                     <h3 className="font-display text-2xl font-semibold leading-snug text-ink transition-colors group-hover:text-gold-deep md:text-3xl">
                       {featured.post_title}
