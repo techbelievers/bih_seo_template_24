@@ -16,6 +16,7 @@ import Banks from "../components/Banks";
 import EmiCalculator from "../components/EmiCalculator";
 import MahaReraSection from "../components/MahaReraSection";
 import AboutBuilder from "../components/AboutBuilder";
+import Testimonials from "../components/Testimonials";
 import Blogs from "../components/Blogs";
 import FAQ from "../components/FAQ";
 import ContactSection from "../components/ContactSection";
@@ -44,6 +45,7 @@ const HomePage = () => (
     <LazySection anchor="emi" minHeight={0}><EmiCalculator /></LazySection>
     <LazySection anchor="about-builder" minHeight={0}><AboutBuilder /></LazySection>
     <LazySection anchor="blogs" minHeight={0}><Blogs /></LazySection>
+    <LazySection anchor="testimonials" minHeight={0}><Testimonials /></LazySection>
     <LazySection anchor="faq" minHeight={0}><FAQ /></LazySection>
     <LazySection anchor="contact" minHeight={760}><ContactSection /></LazySection>
   </main>
