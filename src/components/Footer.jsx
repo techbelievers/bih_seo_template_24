@@ -130,9 +130,13 @@ const Footer = () => {
             </div>
             <div className="mt-4 space-y-1 text-xs leading-relaxed">
               {g.footer_agent_rera && <p>Agent: {g.footer_agent_rera}</p>}
-              {rera.map((r) => (
-                <p key={r.id}>Project: {r.rera_id}</p>
-              ))}
+              {rera.some((r) => r.rera_id) ? (
+                rera
+                  .filter((r) => r.rera_id)
+                  .map((r) => <p key={r.id}>Project: {r.rera_id}</p>)
+              ) : (
+                <p>Project MahaRERA: Coming Soon</p>
+              )}
               <a
                 href={reraUrl}
                 target="_blank"
