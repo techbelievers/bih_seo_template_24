@@ -26,6 +26,17 @@
   <link rel="icon" href="<%= favicon %>" />
   <link rel="canonical" href="https://<%= domain %>/" />
 
+  <!-- Images fade in via JS (see components/ui/Img.jsx), so the prerendered
+       snapshot ships them at opacity:0 behind a shimmer. With scripting off
+       that fade never runs — reveal them and stop the placeholder animation.
+       Scoped to <noscript>, so it can never apply to a JS-enabled visitor. -->
+  <noscript>
+    <style>
+      #root img { opacity: 1 !important; }
+      .skeleton, .skeleton-dark { animation: none !important; background: none !important; }
+    </style>
+  </noscript>
+
   <!-- Inject JSON-LD Structured Data -->
   <% if (script_1 && script_1 !== '{}') { %>
     <script type="application/ld+json">

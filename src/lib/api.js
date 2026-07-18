@@ -48,6 +48,33 @@ export function subscribeApi(path, fn) {
   return () => listeners.get(path)?.delete(fn);
 }
 
+/**
+ * Run once the page has finished loading and the main thread is idle.
+ * Background revalidation is never urgent — the inlined payload is already
+ * on screen — but firing it during first paint competes with images for
+ * bandwidth and lets a differing payload swap content out from under the
+ * user mid-scroll. Waiting until idle keeps the opening seconds stable.
+ */
+function whenIdle(fn) {
+  let done = false;
+  const run = () => {
+    if (done) return;
+    done = true;
+    fn();
+  };
+  const go = () =>
+    "requestIdleCallback" in window
+      ? window.requestIdleCallback(run, { timeout: 3000 })
+      : setTimeout(run, 1200);
+
+  if (document.readyState === "complete") return go();
+  window.addEventListener("load", go, { once: true });
+  // `load` waits on every image and third-party embed, so on a gallery-heavy
+  // page it can be many seconds out — or never, if the map stalls. Fall back
+  // on a timer so CMS edits still reach the user either way.
+  setTimeout(run, 5000);
+}
+
 export function fetchApi(path) {
   if (!cache.has(path)) {
     const promise = request(path)
@@ -66,15 +93,17 @@ export function fetchApi(path) {
   // so CMS edits made after the last deploy still reach the user.
   if (PRELOADED && path in PRELOADED && !revalidated.has(path)) {
     revalidated.add(path);
-    request(path)
-      .then((data) => {
-        if (JSON.stringify(data) !== JSON.stringify(snapshot[path])) {
-          snapshot[path] = data;
-          cache.set(path, Promise.resolve(data));
-          listeners.get(path)?.forEach((fn) => fn(data));
-        }
-      })
-      .catch(() => {});
+    whenIdle(() => {
+      request(path)
+        .then((data) => {
+          if (JSON.stringify(data) !== JSON.stringify(snapshot[path])) {
+            snapshot[path] = data;
+            cache.set(path, Promise.resolve(data));
+            listeners.get(path)?.forEach((fn) => fn(data));
+          }
+        })
+        .catch(() => {});
+    });
   }
 
   return cache.get(path);
