@@ -27,22 +27,37 @@ const RouteFallback = () => (
  */
 const HashScrollFix = () => {
   useEffect(() => {
+    const currentHash = () => decodeURIComponent(window.location.hash.slice(1));
+    let timer = null;
+
     const settle = () => {
-      const id = decodeURIComponent(window.location.hash.slice(1));
+      // A previous run keeps re-aligning for ~4s. Navigating again inside that
+      // window would leave two loops scrolling to different targets, and the
+      // page visibly ping-pongs between them until the older one runs out of
+      // attempts — so retire it before starting another.
+      clearTimeout(timer);
+      const id = currentHash();
       if (!id) return;
       let attempts = 0;
       const tick = () => {
+        // A tick already queued when the hash changed would scroll back to the
+        // stale target; drop it rather than fight the newer destination.
+        if (currentHash() !== id) return;
         const el = document.getElementById(id);
         if (el && Math.abs(el.getBoundingClientRect().top - 84) > 70) {
           el.scrollIntoView({ behavior: "auto" });
         }
-        if (++attempts < 6) setTimeout(tick, 700);
+        if (++attempts < 6) timer = setTimeout(tick, 700);
       };
-      setTimeout(tick, 400);
+      timer = setTimeout(tick, 400);
     };
+
     window.addEventListener("hashchange", settle);
     settle();
-    return () => window.removeEventListener("hashchange", settle);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("hashchange", settle);
+    };
   }, []);
   return null;
 };

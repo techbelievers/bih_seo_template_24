@@ -49,6 +49,52 @@ export function subscribeApi(path, fn) {
 }
 
 /**
+ * Buffer revalidated payloads and commit them together.
+ *
+ * Each endpoint revalidates on its own clock, so a snapshot that has drifted
+ * since the last deploy used to repaint the page in a ripple — the header
+ * swapping its title, then the nav dropping a link 120ms later, and so on.
+ * Collecting the diffs and notifying in one synchronous pass lets React batch
+ * them into a single commit: one repaint instead of a visible cascade.
+ */
+const pendingUpdates = new Map();
+let inFlight = 0;
+let capTimer = null;
+
+function flushUpdates() {
+  clearTimeout(capTimer);
+  capTimer = null;
+  if (!pendingUpdates.size) return;
+  const batch = [...pendingUpdates];
+  pendingUpdates.clear();
+  for (const [path, data] of batch) {
+    snapshot[path] = data;
+    cache.set(path, Promise.resolve(data));
+  }
+  // Separate loop: every listener fires in the same tick, so React coalesces
+  // the whole batch into one render pass.
+  for (const [path, data] of batch) {
+    listeners.get(path)?.forEach((fn) => fn(data));
+  }
+}
+
+function queueUpdate(path, data) {
+  pendingUpdates.set(path, data);
+  // Responses land hundreds of ms apart, so a fixed debounce still splits the
+  // commit. Hold everything until the last revalidation settles instead, with
+  // a cap so one hung request can't sit on the batch forever.
+  if (!capTimer) capTimer = setTimeout(flushUpdates, 5000);
+}
+
+/** Track revalidation completion so the batch commits exactly once. */
+function settleRevalidation() {
+  if (--inFlight <= 0) {
+    inFlight = 0;
+    flushUpdates();
+  }
+}
+
+/**
  * Run once the page has finished loading and the main thread is idle.
  * Background revalidation is never urgent — the inlined payload is already
  * on screen — but firing it during first paint competes with images for
@@ -93,16 +139,16 @@ export function fetchApi(path) {
   // so CMS edits made after the last deploy still reach the user.
   if (PRELOADED && path in PRELOADED && !revalidated.has(path)) {
     revalidated.add(path);
+    inFlight++;
     whenIdle(() => {
       request(path)
         .then((data) => {
           if (JSON.stringify(data) !== JSON.stringify(snapshot[path])) {
-            snapshot[path] = data;
-            cache.set(path, Promise.resolve(data));
-            listeners.get(path)?.forEach((fn) => fn(data));
+            queueUpdate(path, data);
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(settleRevalidation);
     });
   }
 
