@@ -34,7 +34,7 @@ const HashScrollFix = () => {
       const tick = () => {
         const el = document.getElementById(id);
         if (el && Math.abs(el.getBoundingClientRect().top - 84) > 70) {
-          el.scrollIntoView({ behavior: attempts === 0 ? "smooth" : "auto" });
+          el.scrollIntoView({ behavior: "auto" });
         }
         if (++attempts < 6) setTimeout(tick, 700);
       };

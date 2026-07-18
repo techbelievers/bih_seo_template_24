@@ -18,7 +18,11 @@ export default function useApi(path) {
 
   useEffect(() => {
     let active = true;
-    setState((s) => (s.loading ? s : { ...s, loading: true }));
+    // Only fall back to the loading state when there is nothing to show yet.
+    // Sections render their skeletons *alongside* their data, so flipping this
+    // on while data is already in hand injects placeholders over live content
+    // and rips them out a tick later — a visible flash on every mount.
+    setState((s) => (s.loading || s.data ? s : { ...s, loading: true }));
     fetchApi(path)
       .then((data) => active && setState({ data, loading: false, error: null }))
       .catch((err) =>

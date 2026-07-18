@@ -166,7 +166,7 @@ const Footer = () => {
               `© ${new Date().getFullYear()} All rights reserved.`}
           </p>
           <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            onClick={() => window.scrollTo({ top: 0, behavior: "auto" })}
             aria-label="Back to top"
             className="flex h-10 w-10 items-center justify-center rounded-full border border-line-dark text-mist transition hover:border-gold hover:text-gold"
           >

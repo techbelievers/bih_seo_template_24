@@ -55,8 +55,8 @@
   }
 }
 
+/* Anchor jumps land instantly — no smooth-scroll slide through the page */
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -91,20 +91,6 @@ body {
   background: linear-gradient(90deg, #221e15 25%, #2c271b 50%, #221e15 75%);
   background-size: 600px 100%;
   animation: var(--animate-shimmer);
-}
-
-/* Scroll reveal — JS adds .is-visible */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
-}
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
 }
 
 /* 3D tilt cards — pointer devices only */
@@ -320,8 +306,6 @@ body {
 
 /* Accessibility: honour reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .reveal { opacity: 1; transform: none; transition: none; }
   .tilt, .tilt:hover, .tilt-sm:hover { transform: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

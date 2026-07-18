@@ -1,33 +1,74 @@
 import React from "react";
 import {
-  Waves, Car, Dumbbell, ParkingCircle, BatteryCharging, Cctv, Gamepad2,
-  ArrowUpFromDot, Shield, Recycle, Wifi, TentTree, PlugZap, Footprints,
-  Theater, Dog, Volleyball, Sparkles,
+  Waves, Car, Dumbbell, SquareParking, BatteryCharging, Cctv, Gamepad2,
+  ArrowUpFromDot, ShieldCheck, Recycle, Wifi, TentTree, PlugZap, Footprints,
+  Theater, Dog, Volleyball, Sparkles, Drama, Building2, DoorOpen, Route,
+  Trees, Baby, Flower2, Bath, BookOpen, CloudRain, Droplets, Sun,
+  FireExtinguisher, Phone, PartyPopper, Utensils, CreditCard, Armchair,
+  BedDouble, Bike, Church, Store, Music, Lightbulb, Fence, Wind,
 } from "lucide-react";
 import useApi from "../hooks/useApi";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
 import { useEnquiry } from "../hooks/useEnquiry";
 
-const ICONS = {
-  "Swimming Pool": Waves,
-  "Parking Lot": Car,
-  Gym: Dumbbell,
-  "Cricket Pitch": Volleyball,
-  Football: Volleyball,
-  "Cover Parking Lot": ParkingCircle,
-  "Battery Backup": BatteryCharging,
-  CCTV: Cctv,
-  "Indoor Games": Gamepad2,
-  Lift: ArrowUpFromDot,
-  "Security Gaurd": Shield,
-  "Solid Waste management": Recycle,
-  "Free Wifi": Wifi,
-  Amphitheater: TentTree,
-  "Electical Vehical Charging Point": PlugZap,
-  "Jogging Track": Footprints,
-  "Mini Theater": Theater,
-  "Pet Play Area": Dog,
+/**
+ * Amenity names arrive free-form from the CMS and vary per project
+ * ("Landscape Garden", "Garden Area", "Central Green"…), so exact-string
+ * lookup left most of them on the same fallback icon. Match on keywords
+ * instead — ordered most-specific first, since the first hit wins.
+ */
+const ICON_RULES = [
+  [["cover parking", "covered parking"], SquareParking],
+  [["parking"], Car],
+  [["swimming", "pool"], Waves],
+  [["gym", "fitness"], Dumbbell],
+  [["cctv", "surveillance"], Cctv],
+  // "gaurd" — the CMS ships this misspelling
+  [["security", "guard", "gaurd"], ShieldCheck],
+  [["club"], Building2],
+  [["entrance", "gate"], DoorOpen],
+  [["road", "pathway", "driveway"], Route],
+  [["garden", "landscape", "lawn", "green", "plantation"], Trees],
+  [["lift", "elevator"], ArrowUpFromDot],
+  [["battery", "power backup", "generator", "dg set"], BatteryCharging],
+  [["wifi", "wi-fi", "internet", "broadband"], Wifi],
+  [["charging", "electric vehic", "electical vehical", "ev point"], PlugZap],
+  [["cycl", "bicycle"], Bike],
+  [["jogging", "walking", "running", "track"], Footprints],
+  [["indoor game", "games", "gaming"], Gamepad2],
+  [["amphi"], Drama],
+  [["theater", "theatre", "cinema"], Theater],
+  [["pet"], Dog],
+  [["waste", "garbage", "compost"], Recycle],
+  [["sewage", "water treatment", "stp", "water supply"], Droplets],
+  [["rain water", "rainwater", "harvest"], CloudRain],
+  [["solar"], Sun],
+  [["fire"], FireExtinguisher],
+  [["intercom", "telephone"], Phone],
+  [["banquet", "party", "celebration", "multipurpose hall"], PartyPopper],
+  [["cafe", "restaurant", "dining", "food", "kitchen"], Utensils],
+  [["library", "reading"], BookOpen],
+  [["yoga", "meditation", "spa", "wellness"], Flower2],
+  [["jacuzzi", "steam", "sauna", "bath"], Bath],
+  [["kids", "children", "toddler", "play area", "creche"], Baby],
+  [["senior", "elder"], Armchair],
+  [["guest"], BedDouble],
+  [["temple", "worship", "prayer"], Church],
+  [["atm", "bank"], CreditCard],
+  [["cricket", "football", "basketball", "badminton", "tennis", "volleyball", "sports", "court"], Volleyball],
+  [["gazebo", "pergola", "sit out", "seating", "deck"], TentTree],
+  [["shopping", "store", "retail", "market", "convenience"], Store],
+  [["music", "dance"], Music],
+  [["light", "lamp"], Lightbulb],
+  [["compound", "boundary", "fence", "wall"], Fence],
+  [["ventilation", "air"], Wind],
+];
+
+const iconFor = (name = "") => {
+  const n = name.toLowerCase();
+  const hit = ICON_RULES.find(([keys]) => keys.some((k) => n.includes(k)));
+  return hit ? hit[1] : Sparkles;
 };
 
 const Amenities = () => {
@@ -57,7 +98,7 @@ const Amenities = () => {
             [...Array(10)].map((_, i) => <div key={i} className="skeleton-dark h-32 rounded-2xl" />)}
 
           {list.map((a, i) => {
-            const Icon = ICONS[a.amenity_name] || Sparkles;
+            const Icon = iconFor(a.amenity_name);
             return (
               <Reveal key={a.id} delay={(i % 5) * 70}>
                 <div className="tilt-sm group flex h-full flex-col items-center justify-center gap-3.5 rounded-2xl border border-line-dark bg-ink-soft px-4 py-7 text-center transition-colors duration-300 hover:border-gold/40">
