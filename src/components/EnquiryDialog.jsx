@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { X, Phone, User, Mail, MessageSquare, Send, Loader2, AlertCircle, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { X, User, Mail, MessageSquare, Send, Loader2, AlertCircle, ShieldCheck, CheckCircle2 } from "lucide-react";
 import useApi from "../hooks/useApi";
 import { postEnquiry } from "../lib/api";
+import { isValidPhone } from "../lib/phone";
+import PhoneField from "./ui/PhoneField";
 
 const inputBase =
   "w-full rounded-xl border border-line bg-cream px-4 py-3 text-sm text-ink placeholder:text-mist focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/30 transition";
@@ -45,8 +47,8 @@ const EnquiryDialog = ({ intent, onClose }) => {
     if (!form.first_name.trim()) er.first_name = "First name is required";
     if (!form.last_name.trim()) er.last_name = "Last name is required";
     if (!form.phone_number.trim()) er.phone_number = "Phone number is required";
-    else if (!/^[0-9]{10}$/.test(form.phone_number.trim()))
-      er.phone_number = "Enter a valid 10-digit number";
+    else if (!isValidPhone(form.phone_number))
+      er.phone_number = "Enter a valid phone number";
     return er;
   };
 
@@ -143,19 +145,15 @@ const EnquiryDialog = ({ intent, onClose }) => {
           </div>
 
           <div>
-            <div className="relative">
-              <Phone size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gold-deep" />
-              <input
-                name="phone_number"
-                value={form.phone_number}
-                onChange={set}
-                placeholder="10-digit mobile number*"
-                inputMode="numeric"
-                autoComplete="tel-national"
-                maxLength={10}
-                className={`${inputBase} pl-10 ${errors.phone_number ? "border-red-400" : ""}`}
-              />
-            </div>
+            <PhoneField
+              value={form.phone_number}
+              onChange={(phone) => {
+                setForm((f) => ({ ...f, phone_number: phone }));
+                if (errors.phone_number)
+                  setErrors((er) => ({ ...er, phone_number: null }));
+              }}
+              invalid={!!errors.phone_number}
+            />
             {errors.phone_number && (
               <p className="mt-1 text-xs text-red-500">{errors.phone_number}</p>
             )}

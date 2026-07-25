@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Phone, MessageCircle, Clock3, ShieldCheck, Send, Loader2, AlertCircle } from "lucide-react";
 import useApi from "../hooks/useApi";
 import { postEnquiry } from "../lib/api";
-import { cleanPhone, waLink } from "../lib/phone";
+import { cleanPhone, waLink, isValidPhone } from "../lib/phone";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
+import PhoneField from "./ui/PhoneField";
 
 const inputBase =
   "w-full rounded-xl border border-line-dark bg-ink px-4 py-3.5 text-sm text-ivory placeholder:text-mist/60 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/25 transition";
@@ -39,8 +40,9 @@ const ContactSection = () => {
     const er = {};
     if (!form.first_name.trim()) er.first_name = "Required";
     if (!form.last_name.trim()) er.last_name = "Required";
-    if (!/^[0-9]{10}$/.test(form.phone_number.trim()))
-      er.phone_number = "Enter a valid 10-digit number";
+    if (!form.phone_number.trim()) er.phone_number = "Phone number is required";
+    else if (!isValidPhone(form.phone_number))
+      er.phone_number = "Enter a valid phone number";
     if (Object.keys(er).length) return setErrors(er);
 
     setSubmitting(true);
@@ -150,15 +152,15 @@ const ContactSection = () => {
                   ))}
                 </div>
                 <div>
-                  <input
-                    name="phone_number"
+                  <PhoneField
+                    dark
                     value={form.phone_number}
-                    onChange={set}
-                    placeholder="10-digit mobile number*"
-                    inputMode="numeric"
-                    maxLength={10}
-                    autoComplete="tel-national"
-                    className={`${inputBase} ${errors.phone_number ? "border-red-400" : ""}`}
+                    onChange={(phone) => {
+                      setForm((f) => ({ ...f, phone_number: phone }));
+                      if (errors.phone_number)
+                        setErrors((er) => ({ ...er, phone_number: null }));
+                    }}
+                    invalid={!!errors.phone_number}
                   />
                   {errors.phone_number && (
                     <p className="mt-1 text-xs text-red-400">{errors.phone_number}</p>
