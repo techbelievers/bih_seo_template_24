@@ -45,8 +45,7 @@ const Prices = () => {
                   filter === t
                     ? "bg-ink text-ivory shadow-lift"
                     : "border border-line bg-white text-stone hover:border-gold hover:text-ink"
-                }`}
-              >
+                }`}>
                 {t}
               </button>
             ))}

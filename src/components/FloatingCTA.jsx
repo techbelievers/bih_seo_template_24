@@ -35,11 +35,9 @@ const FloatingCTA = () => {
         href={wa}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chat on WhatsApp"
         className={`fixed bottom-7 right-7 z-40 hidden h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-deep transition-all duration-500 hover:scale-110 md:flex ${
           visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0"
-        }`}
-      >
+        }`} aria-label="Chat on WhatsApp">
         <MessageCircle size={26} fill="currentColor" strokeWidth={0} />
       </a>
 

@@ -61,8 +61,7 @@ const FAQ = () => {
                   <button
                     onClick={() => setOpen(isOpen ? null : i)}
                     aria-expanded={isOpen}
-                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
-                  >
+                    className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left">
                     <h3 className="font-display text-[17px] font-semibold leading-snug text-ink">
                       {faq.faq_title}
                     </h3>

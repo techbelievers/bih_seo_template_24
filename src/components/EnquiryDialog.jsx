@@ -187,8 +187,7 @@ const EnquiryDialog = ({ intent, onClose }) => {
           <button
             type="submit"
             disabled={submitting}
-            className="btn-gold w-full disabled:opacity-70"
-          >
+            className="btn-gold w-full disabled:opacity-70">
             {submitting ? (
               <>
                 <Loader2 size={17} className="animate-spin" /> Sending…

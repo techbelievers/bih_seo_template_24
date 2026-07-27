@@ -63,8 +63,7 @@ const Layouts = () => {
                   }}
                   className={`rounded-full px-5 py-2.5 text-[13px] font-bold tracking-wide transition-all duration-300 sm:px-7 ${
                     activeKey === t.key ? "bg-ink text-ivory shadow-lift" : "text-stone hover:text-ink"
-                  }`}
-                >
+                  }`}>
                   {t.label}
                 </button>
               ))}

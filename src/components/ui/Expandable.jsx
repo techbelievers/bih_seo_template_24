@@ -81,8 +81,7 @@ const Expandable = ({
             aria-expanded={open}
             className={`inline-flex items-center gap-1.5 text-sm font-bold uppercase tracking-[0.16em] transition ${
               dark ? "text-gold hover:text-gold-soft" : "text-gold-deep hover:text-gold"
-            }`}
-          >
+            }`}>
             {open ? lessLabel : moreLabel}
             <ChevronDown
               size={15}

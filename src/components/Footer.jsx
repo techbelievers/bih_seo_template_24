@@ -107,8 +107,7 @@ const Footer = () => {
             {phone && (
               <a
                 href={`tel:${phone}`}
-                className="flex items-center gap-2.5 text-sm transition hover:text-gold"
-              >
+                className="flex items-center gap-2.5 text-sm transition hover:text-gold" aria-label="Call">
                 <Phone size={15} className="text-gold" /> {phone}
               </a>
             )}

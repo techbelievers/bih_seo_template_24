@@ -107,8 +107,7 @@ const Navbar = () => {
                       : scrolled
                         ? "text-ink/70 hover:text-ink"
                         : "text-ivory/80 hover:text-ivory"
-                  }`}
-                >
+                  }`}>
                   {item.label}
                 </a>
               </li>
@@ -138,11 +137,9 @@ const Navbar = () => {
             </button>
             <button
               onClick={() => setOpen(true)}
-              aria-label="Open menu"
               className={`rounded-full p-2.5 transition lg:hidden ${
                 scrolled ? "text-ink hover:bg-ink/5" : "text-ivory hover:bg-white/10"
-              }`}
-            >
+              }`} aria-label="Open menu">
               <Menu size={22} />
             </button>
           </div>
@@ -180,8 +177,7 @@ const Navbar = () => {
                 <a
                   href={`#${item.id}`}
                   onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between rounded-xl px-4 py-3.5 font-display text-lg tracking-wide text-ivory/90 transition hover:bg-white/5 hover:text-gold"
-                >
+                  className="group flex items-center justify-between rounded-xl px-4 py-3.5 font-display text-lg tracking-wide text-ivory/90 transition hover:bg-white/5 hover:text-gold">
                   {item.label}
                   <span className="text-xs text-gold-deep opacity-60">0{i + 1}</span>
                 </a>
