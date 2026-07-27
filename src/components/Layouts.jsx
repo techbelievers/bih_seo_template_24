@@ -201,7 +201,7 @@ const Layouts = () => {
             >
               <X size={20} />
             </button>
-            <img
+            <img loading="lazy" decoding="async"
               src={zoom}
               alt="Expanded layout plan"
               className="max-h-[90vh] max-w-full rounded-xl bg-white object-contain shadow-deep"

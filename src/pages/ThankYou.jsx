@@ -19,7 +19,7 @@ const ThankYou = () => {
 
       <div className="animate-fade-up w-full max-w-lg rounded-3xl border border-line-dark bg-ink-soft p-10 text-center shadow-deep md:p-14">
         {header?.logo && (
-          <img
+          <img loading="lazy" decoding="async"
             src={header.logo}
             alt={header?.property_name || "Logo"}
             className="mx-auto mb-8 h-12 object-contain"

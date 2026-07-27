@@ -55,7 +55,7 @@ const Lightbox = ({ photos, index, setIndex, onClose }) => {
       </button>
 
       <figure className="flex max-h-[86vh] w-full max-w-5xl flex-col items-center px-14">
-        <img
+        <img loading="lazy" decoding="async"
           src={photos[index].photo}
           alt={`Gallery image ${index + 1}`}
           className="max-h-[78vh] w-auto max-w-full rounded-xl object-contain shadow-deep"

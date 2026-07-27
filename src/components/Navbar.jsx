@@ -76,7 +76,7 @@ const Navbar = () => {
               <span className={`h-10 w-28 rounded-lg ${scrolled ? "skeleton" : "skeleton-dark"}`} />
             ) : (
               header?.logo && (
-                <img
+                <img loading="lazy"
                   src={header.logo}
                   alt={header?.property_name || "Property logo"}
                   className="h-10 w-auto object-contain md:h-11"
