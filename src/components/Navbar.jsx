@@ -87,7 +87,7 @@ const Navbar = () => {
               )
             )}
             <span
-              className={`hidden truncate font-display text-lg font-semibold tracking-wide sm:block ${
+              className={`hidden max-w-[38ch] truncate font-display text-base font-semibold tracking-wide md:block lg:hidden xl:block ${
                 scrolled ? "text-ink" : "text-ivory"
               }`}
             >

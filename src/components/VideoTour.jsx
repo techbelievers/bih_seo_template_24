@@ -67,11 +67,11 @@ const VideoTour = () => {
         />
 
         {loading ? (
-          <div className="skeleton-dark aspect-video w-full rounded-3xl" />
+          <div className="skeleton-dark mx-auto aspect-video w-full max-w-3xl rounded-3xl" />
         ) : (
           <>
             <Reveal>
-              <div className="relative aspect-video overflow-hidden rounded-3xl border border-line-dark shadow-deep">
+              <div className="relative mx-auto aspect-video max-w-3xl overflow-hidden rounded-3xl border border-line-dark shadow-deep">
                 <YouTubeFacade
                   key={videos[active]?.youtube_video_id}
                   videoId={videos[active]?.youtube_video_id}
@@ -81,7 +81,7 @@ const VideoTour = () => {
             </Reveal>
 
             {videos.length > 1 && (
-              <div className="no-scrollbar mt-6 flex gap-3 overflow-x-auto pb-1">
+              <div className="no-scrollbar mx-auto mt-6 flex max-w-3xl justify-center gap-3 overflow-x-auto pb-1">
                 {videos.map((v, i) => (
                   <button
                     key={v.id}

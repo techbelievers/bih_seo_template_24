@@ -42,12 +42,12 @@ const Advertisement = () => {
                 href={ad.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative block overflow-hidden rounded-3xl border border-line shadow-lift transition-all duration-500 hover:-translate-y-1 hover:shadow-float"
+                className="group relative mx-auto block w-full max-w-2xl overflow-hidden rounded-3xl border border-line shadow-lift transition-all duration-500 hover:-translate-y-1 hover:shadow-float"
               >
                 <Img
                   src={ad.image}
                   alt={`${page?.heading || "Featured partner"} ${ad.id}`}
-                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03] !h-auto"
+                  imgClassName="transition-transform duration-700 group-hover:scale-[1.03] !h-auto max-h-[340px] object-contain"
                   className="[&>img]:w-full"
                 />
                 <span className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-ink/70 text-gold opacity-0 backdrop-blur transition-opacity duration-300 group-hover:opacity-100">

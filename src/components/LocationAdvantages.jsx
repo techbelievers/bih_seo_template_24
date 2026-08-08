@@ -1,9 +1,11 @@
-import React from "react";
-import { MapPin, Navigation } from "lucide-react";
+import React, { useState } from "react";
+import { MapPin, Navigation, ChevronDown } from "lucide-react";
 import useApi from "../hooks/useApi";
 import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
 import Img from "./ui/Img";
+
+const INITIAL = 6;
 
 /**
  * Connectivity cards — image-led with a prominent distance badge.
@@ -11,10 +13,13 @@ import Img from "./ui/Img";
  */
 const LocationAdvantages = () => {
   const { data, loading } = useApi("location-advantages");
+  const [showAll, setShowAll] = useState(false);
   const list = data?.location_advantages || [];
   const heading = data?.page?.[0]?.heading;
 
   if (!loading && list.length === 0) return null;
+
+  const visible = showAll ? list : list.slice(0, INITIAL);
 
   return (
     <section className="bg-cream py-20 md:py-28">
@@ -33,7 +38,7 @@ const LocationAdvantages = () => {
               </div>
             ))}
 
-          {list.map((item, i) => (
+          {visible.map((item, i) => (
             <Reveal
               key={item.id ?? i}
               delay={(i % 3) * 90}
@@ -66,6 +71,15 @@ const LocationAdvantages = () => {
             </Reveal>
           ))}
         </div>
+
+        {!loading && list.length > INITIAL && (
+          <div className="mt-10 text-center">
+            <button onClick={() => setShowAll((s) => !s)} aria-expanded={showAll} className="btn-dark">
+              {showAll ? "View Less" : `View All ${list.length} Landmarks`}
+              <ChevronDown size={15} className={`transition-transform duration-300 ${showAll ? "rotate-180" : ""}`} />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
