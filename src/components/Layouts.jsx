@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, Expand, X, Ruler, Tag as TagIcon } from "lucide-react";
 import useApi from "../hooks/useApi";
@@ -23,6 +23,13 @@ const Layouts = () => {
   const [tab, setTab] = useState("unit");
   const [slide, setSlide] = useState(0);
   const [zoom, setZoom] = useState(null);
+  const railRef = useRef(null);
+
+  // Slide the configuration rail left/right by roughly one "page".
+  const scrollRail = (dir) => {
+    const el = railRef.current;
+    if (el) el.scrollBy({ left: dir * (el.clientWidth * 0.8), behavior: "smooth" });
+  };
 
   const datasets = {
     unit: { list: unit.data?.unit_layout || [], page: unit.data?.page?.[0] },
@@ -35,6 +42,13 @@ const Layouts = () => {
   const active = activeKey ? datasets[activeKey] : null;
   const layouts = active?.list || [];
   const current = layouts[Math.min(slide, layouts.length - 1)];
+
+  // Keep the selected chip visible as the user steps through configurations.
+  useEffect(() => {
+    const el = railRef.current;
+    const chip = el?.querySelector('[data-active="true"]');
+    if (chip) chip.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
+  }, [slide, activeKey]);
 
   if (!loading && tabs.length === 0) return null;
 
@@ -158,23 +172,57 @@ const Layouts = () => {
                     Get Costing Details
                   </button>
 
-                  {/* Thumbnail rail */}
+                  {/* Configuration slider — a scrollable rail of every unit,
+                      with arrows + edge fades so it reads clearly as a slider. */}
                   {layouts.length > 1 && (
-                    <div className="no-scrollbar mt-8 flex gap-2.5 overflow-x-auto pb-1">
-                      {layouts.map((l, i) => (
+                    <div className="mt-8">
+                      <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-stone">
+                        Select configuration
+                      </p>
+                      <div className="relative">
+                        {/* edge fades hint there is more to scroll */}
+                        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-white to-transparent" />
+                        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-white to-transparent" />
+
                         <button
-                          key={l.id ?? i}
-                          onClick={() => setSlide(i)}
-                          aria-label={`Show ${l.layout_name}`}
-                          className={`shrink-0 rounded-full border px-4 py-2 text-xs font-bold transition ${
-                            i === slide
-                              ? "border-gold bg-gold/10 text-gold-deep"
-                              : "border-line bg-white text-stone hover:border-gold/50"
-                          }`}
+                          type="button"
+                          onClick={() => scrollRail(-1)}
+                          aria-label="Scroll configurations left"
+                          className="absolute -left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-ink shadow-lift transition hover:border-gold hover:text-gold-deep"
                         >
-                          {l.layout_name}
+                          <ChevronLeft size={18} />
                         </button>
-                      ))}
+
+                        <div
+                          ref={railRef}
+                          className="no-scrollbar flex snap-x gap-2.5 overflow-x-auto px-9 pb-1"
+                        >
+                          {layouts.map((l, i) => (
+                            <button
+                              key={l.id ?? i}
+                              data-active={i === slide}
+                              onClick={() => setSlide(i)}
+                              aria-label={`Show ${l.layout_name}`}
+                              className={`shrink-0 snap-center rounded-full border px-4 py-2 text-xs font-bold transition ${
+                                i === slide
+                                  ? "border-gold bg-gold/10 text-gold-deep"
+                                  : "border-line bg-white text-stone hover:border-gold/50"
+                              }`}
+                            >
+                              {l.layout_name}
+                            </button>
+                          ))}
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => scrollRail(1)}
+                          aria-label="Scroll configurations right"
+                          className="absolute -right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-ink shadow-lift transition hover:border-gold hover:text-gold-deep"
+                        >
+                          <ChevronRight size={18} />
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -200,10 +248,15 @@ const Layouts = () => {
             >
               <X size={20} />
             </button>
-            <img loading="lazy" decoding="async"
+            <img
               src={zoom}
               alt="Expanded layout plan"
-              className="max-h-[90vh] max-w-full rounded-xl bg-white object-contain shadow-deep"
+              loading="eager"
+              decoding="async"
+              /* w-full + a max cap scales a small plan UP to fill the viewer.
+                 Sizing it intrinsically made "expand" render the plan smaller
+                 than the card behind it. */
+              className="h-auto max-h-[90vh] w-full max-w-[min(92vw,1100px)] rounded-xl bg-white object-contain shadow-deep"
               onClick={(e) => e.stopPropagation()}
             />
           </div>,

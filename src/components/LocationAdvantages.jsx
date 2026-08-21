@@ -5,11 +5,11 @@ import SectionHeading from "./ui/SectionHeading";
 import Reveal from "./ui/Reveal";
 import Img from "./ui/Img";
 
-const INITIAL = 6;
+const INITIAL = 10;
 
 /**
- * Connectivity cards — image-led with a prominent distance badge.
- * Horizontal snap rail on mobile, grid on desktop.
+ * Connectivity tiles — compact logo-wall scale, matching the bank tiles, so the
+ * section reads as a quick landmark index rather than a photo gallery.
  */
 const LocationAdvantages = () => {
   const { data, loading } = useApi("location-advantages");
@@ -30,21 +30,15 @@ const LocationAdvantages = () => {
           sub="Everything that matters — minutes away."
         />
 
-        <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:snap-none sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3 lg:gap-6">
+        <div className="flex flex-wrap items-stretch justify-center gap-3 sm:gap-4 md:gap-5">
           {loading &&
-            [...Array(3)].map((_, i) => (
-              <div key={i} className="h-72 w-[78%] shrink-0 sm:w-auto">
-                <div className="skeleton h-full rounded-3xl" />
-              </div>
+            [...Array(5)].map((_, i) => (
+              <div key={i} className="skeleton h-[150px] w-[136px] rounded-xl sm:h-[170px] sm:w-44 sm:rounded-2xl" />
             ))}
 
           {visible.map((item, i) => (
-            <Reveal
-              key={item.id ?? i}
-              delay={(i % 3) * 90}
-              className="w-[78%] shrink-0 snap-start sm:w-auto"
-            >
-              <article className="tilt group h-full overflow-hidden rounded-3xl border border-line bg-white shadow-lift">
+            <Reveal key={item.id ?? i} delay={(i % 5) * 60}>
+              <article className="tilt-sm group flex h-full w-[136px] flex-col overflow-hidden rounded-xl border border-line bg-white shadow-lift transition-colors hover:border-gold/50 sm:w-44 sm:rounded-2xl">
                 <div className="relative">
                   <Img
                     src={item.location_image}
@@ -52,20 +46,15 @@ const LocationAdvantages = () => {
                     aspect="16/10"
                     imgClassName="transition-transform duration-700 group-hover:scale-105"
                   />
-                  <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-ink/85 px-3.5 py-1.5 text-xs font-bold text-gold backdrop-blur-sm">
-                    <Navigation size={12} /> {item.distance}
+                  <span className="absolute bottom-1.5 left-1.5 inline-flex items-center gap-1 rounded-full bg-ink/85 px-2 py-0.5 text-[10px] font-bold text-gold backdrop-blur-sm">
+                    <Navigation size={10} /> {item.distance}
                   </span>
                 </div>
-                <div className="p-6">
-                  <h3 className="flex items-start gap-2 font-display text-xl font-semibold text-ink">
-                    <MapPin size={17} className="mt-1 shrink-0 text-gold-deep" />
+                <div className="flex flex-1 items-start gap-1.5 px-2.5 py-2.5 sm:px-3">
+                  <MapPin size={12} className="mt-[3px] shrink-0 text-gold-deep" />
+                  <h3 className="text-[11px] font-semibold leading-tight text-ink sm:text-xs">
                     {item.location}
                   </h3>
-                  {item.description && (
-                    <p className="mt-2.5 text-sm leading-relaxed text-stone">
-                      {item.description}
-                    </p>
-                  )}
                 </div>
               </article>
             </Reveal>
